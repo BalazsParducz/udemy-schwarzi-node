@@ -5,26 +5,28 @@ const server = http.createServer((req, res) => {
     const url = req.url;
     const method = req.method;
     if(url === '/') {
-        res.wite('<html>');
-        res.wite('<head><title>Enter Message</title></head>');
-        res.wite('<body><form action="/message" method="POST"><input type="text" name"message"/><button type="submit">Press</button></form></body>');
-        res.wite('</html>');
+        res.write('<html>');
+        res.write('<head><title>Enter Message</title></head>');
+        res.write('<body><form action="/message" method="POST"><input type="text" name="message"><button type="submit">Press me</button></form></body>');
+        res.write('</html>');
         return res.end();
     }
     if(url ==='/message' && method === 'POST') {
         const body = [];
         req.on('data', (chunk) => {
-            console.log(chunk);
+            console.log("This is the chunk:", chunk);
             body.push(chunk);
         });
         req.on('end', () => {
-            const parseBody = BUffer.concat(body).toString();
+            const parseBody = Buffer.concat(body).toString();
+            console.log(parseBody);
             const message = parseBody.split('=')[1];
-            fs.writeFIleSync('message.txt', message);
-        });
-        res.statusCode = 302;
+            fs.writeFileSync('message.txt', message);
+            res.statusCode = 302;
         res.setHeader('Location', '/');
         return res.end();
+        });
+        
     }
     res.setHeader('Content-Type', 'text/html');
     res.write('<html>');
@@ -33,3 +35,6 @@ const server = http.createServer((req, res) => {
     res.write('</html>');
     res.end();
 })
+
+
+server.listen(3000);
