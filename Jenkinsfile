@@ -1,9 +1,13 @@
 pipeline {
     agent { 
         docker {
-            image 'node:10-alpine'
+            image 'node:8-alpine'
             args '-p 3333:3333'
         }
+    }
+    // using the Timestamper plugin we can add timestamps to the console log
+    options {
+        timestamps()
     }
     stages {
         stage('Build') {
